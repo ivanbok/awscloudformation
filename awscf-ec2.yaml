@@ -1,0 +1,61 @@
+---
+Parameters:
+  SecurityGroupDescription:
+    Description: "Security Group Description"
+    Type: String
+
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Condition: DemoCondition
+    Properties:
+      AvailabilityZone: ap-southeast-1a
+      ImageId: !FindInMap [EC2AmiIds, !Ref AWS::Region, "ImageId"]
+      InstanceType: t2.micro
+      SecurityGroups:
+      - !Ref MyEC2SecurityGroup
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash -xe
+          sudo yum update -y
+          sudo yum install -y httpd
+          sudo systemctl start httpd
+          sudo systemctl enable httpd
+          echo "Hello World!" > /var/www/html/index.html
+  MyEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Ref SecurityGroupDescription
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: 22
+        ToPort: 22
+        IpProtocol: tcp
+      - CidrIp: 0.0.0.0/0
+        FromPort: 80
+        ToPort: 80
+        IpProtocol: tcp
+
+Outputs:
+  MyEC2Instance:
+    Description: "My CloudFormation EC2 Instance"
+    Value: !Ref MyInstance
+    Export:
+      Name: MyEC2Instance
+  EC2SecurityGroup:
+    Description: "Security Group Description"
+    Value: !Ref MyEC2SecurityGroup
+    Export: 
+      Name: EC2SecurityGroup
+
+Mappings:
+  EC2AmiIds:
+    ap-southeast-1:
+      "ImageId": ami-0dc5785603ad4ff54
+    ap-southeast-2:
+      "ImageId": ami-0bd2230cfb28832f7
+    ap-northeast-1:
+      "ImageId": ami-0218d08a1f9dac831
+
+Conditions:
+  DemoCondition: !Equals [ "ap-southeast-1", !Ref AWS::Region ]
