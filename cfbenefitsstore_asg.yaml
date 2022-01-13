@@ -18,6 +18,16 @@ Resources:
       Subnets: 
         - !Ref PublicSubnetID
   
+  MyALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      DefaultActions: 
+        - TargetGroupArn: !Ref MyALBTG
+          Type: forward
+      LoadBalancerArn: !Ref MyALB
+      Port: 80
+      Protocol: HTTP
+
   MyALBTG:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
@@ -81,7 +91,7 @@ Resources:
         FromPort: 22
         ToPort: 22
         IpProtocol: tcp
-      - CidrIp: 0.0.0.0/0
+      - SourceSecurityGroupId: !Ref MyALBSecurityGroup
         FromPort: 80
         ToPort: 80
         IpProtocol: tcp
