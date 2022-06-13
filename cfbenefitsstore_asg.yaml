@@ -40,10 +40,10 @@ Resources:
       Name: benefitsstore-tg
       Port: 80
       Protocol: HTTP
-      ProtocolVersion: String
+      ProtocolVersion: HTTP1
       TargetType: instance
       UnhealthyThresholdCount: 2
-      VpcId: String
+      VpcId: !Ref VPCId
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup

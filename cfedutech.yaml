@@ -20,12 +20,12 @@ Resources:
           sudo apt-get update
           sudo apt install git-all --assume-yes
           cd /home/ubuntu
-          sudo -u ubuntu git clone https://github.com/ivanbok/benefitsstore.git
+          sudo -u ubuntu git clone https://github.com/ivanbok/edutech-platform.git
           sudo apt install python3-pip --assume-yes
           sudo pip3 install Django
           sudo pip3 install djangorestframework
           sudo pip3 install djoser
-          sudo python3 benefitsstore/manage.py runserver 0.0.0.0:80 &
+          sudo python3 edutech-platform/manage.py runserver 0.0.0.0:80 &
   MyEC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
